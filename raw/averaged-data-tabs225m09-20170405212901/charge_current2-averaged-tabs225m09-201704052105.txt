@@ -1,0 +1,1 @@
+[2017-04-05 21:05:07.419] charge_current2 AvgVal, 2978.600098, AvgVolt, 2.272283, AvgLinearAdjVal, -0.307310

@@ -1,0 +1,1 @@
+[2017-04-05 17:32:18.250] external_temperature AvgVal, 2048.000000, AvgVolt, 0.001221, AvgLinearAdjVal, -29.877899

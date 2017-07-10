@@ -1,0 +1,1 @@
+[2017-04-05 18:16:06.839] system_current AvgVal, 2045.800049, AvgVolt, -0.006105, AvgLinearAdjVal, -3.382058

@@ -1,0 +1,2 @@
+[2000-02-25 06:31:06.913] adcp_voltage AvgVal, 2045.000000, AvgVolt, -0.006105, AvgLinearAdjVal, -0.042735
+[2000-04-23 06:31:06.913] adcp_voltage AvgVal, 2031.000000, AvgVolt, -0.006205, AvgLinearAdjVal, -0.043135

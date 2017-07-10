@@ -1,0 +1,3 @@
+[2017-04-05 21:41:12.479] radiometer_thermopile AvgVal, 2047.000000, AvgVolt, -0.001221, AvgLinearAdjVal, -0.001221
+[2017-04-05 21:41:22.709] radiometer_case_thermistor AvgVal, 2047.000000, AvgVolt, -0.001221, AvgLinearAdjVal, -0.001221
+[2017-04-05 21:41:32.939] radiometer_dome_thermistor AvgVal, 2048.000000, AvgVolt, 0.001221, AvgLinearAdjVal, 0.001221

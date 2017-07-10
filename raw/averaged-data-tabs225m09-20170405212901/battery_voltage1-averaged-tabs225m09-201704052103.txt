@@ -1,0 +1,1 @@
+[2017-04-05 21:03:07.230] battery_voltage1 AvgVal, 3909.199951, AvgVolt, 4.545787, AvgLinearAdjVal, 13.637362

@@ -1,0 +1,1 @@
+[2017-04-05 19:37:06.639] combined_voltage AvgVal, 2048.800049, AvgVolt, 0.001221, AvgLinearAdjVal, 0.002442

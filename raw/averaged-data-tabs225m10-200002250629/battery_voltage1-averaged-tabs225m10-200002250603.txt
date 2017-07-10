@@ -1,0 +1,1 @@
+[2000-02-25 06:03:07.393] battery_voltage1 AvgVal, 3318.199951, AvgVolt, 3.102564, AvgLinearAdjVal, 9.307693

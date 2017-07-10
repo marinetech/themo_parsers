@@ -1,0 +1,1 @@
+[2017-04-05 21:10:22.779] pyranometer_radiation AvgVal, 2050.000000, AvgVolt, 0.006105, AvgLinearAdjVal, 0.000791

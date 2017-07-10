@@ -1,0 +1,1 @@
+[2017-04-05 21:15:17.939] temperature_internal AvgVal, 2660.000000, AvgVolt, 1.495726, AvgLinearAdjVal, 28.922558

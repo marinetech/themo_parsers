@@ -22,6 +22,12 @@ def clean_str(str):
     ret = ret.replace('}', '')
     return ret
 
+def format_time(str):
+    ret = str
+    #ret = ret.replace(':', '-')
+    ret = ret.split(".")[0]
+    return ret
+
 
 def get_sensor_id(sensor_name):
     if (sensor_name in dict_sensors):
@@ -67,7 +73,7 @@ def adcp_parser(adcp_log, sensor_name, sensor_id):
         d_stamp = clean_str(line.split(' ')[0])
         data["d_stamp"] = d_stamp
         t_stamp = clean_str(line.split(' ')[1])
-        data["t_stamp"] = t_stamp
+        data["t_stamp"] = format_time(t_stamp)
         rest_of_the_line = line.split(']')[1].strip()
         fields = rest_of_the_line.split(',')
         i = 0
@@ -91,7 +97,7 @@ def barometer_parser(vaisala_log, sensor_name, sensor_id):
         d_stamp = clean_str(fields[0])
         data["d_stamp"] = d_stamp
         t_stamp = clean_str(fields[1])
-        data["t_stamp"] = t_stamp
+        data["t_stamp"] = format_time(t_stamp)
         data[fields[2]] = fields[3]
         json_data.append(json.dumps(data))
     fo.close()
@@ -117,7 +123,7 @@ def metpak_parser(metpak_log, sensor_name, sensor_id):
         d_stamp = clean_str(line.split(' ')[0])
         data["d_stamp"] = d_stamp
         t_stamp = clean_str(line.split(' ')[1])
-        data["t_stamp"] = t_stamp
+        data["t_stamp"] = format_time(t_stamp)
         rest_of_the_line = line.split(']')[1].strip()
         fields = rest_of_the_line.split(',')
         i = 0
@@ -148,7 +154,7 @@ def flntu_parser(flntu_log, sensor_name, sensor_id):
         d_stamp = clean_str(line.split(' ')[0])
         data["d_stamp"] = d_stamp
         t_stamp = clean_str(line.split(' ')[1])
-        data["t_stamp"] = t_stamp
+        data["t_stamp"] = format_time(t_stamp)
         fields = line.split(']')[1].strip().split()
         i = 3
         while (i < len(fields)):
@@ -170,7 +176,7 @@ def microcat_parser(microcat_log, sensor_name, sensor_id):
         d_stamp = clean_str(line.split(' ')[0])
         data["d_stamp"] = d_stamp
         t_stamp = clean_str(line.split(' ')[1])
-        data["t_stamp"] = t_stamp
+        data["t_stamp"] = format_time(t_stamp)
         fields = line.split(']')[1].strip().split()
         i = 1
         while (i < len(fields)):
@@ -193,7 +199,7 @@ def gps_parser(gps_log, sensor_name, sensor_id):
         d_stamp = clean_str(line.split(' ')[0])
         data["d_stamp"] = d_stamp
         t_stamp = clean_str(line.split(' ')[1])
-        data["t_stamp"] = t_stamp
+        data["t_stamp"] = format_time(t_stamp)
         fields = line.split('$GPRMC,')[1].strip().split(",")
         i = 0
         while (i < len(fields)):

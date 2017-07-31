@@ -1,1 +1,0 @@
-[2017-04-05 17:42:07.279] humidity_internal AvgVal, 2490.000000, AvgVolt, 1.080586, AvgLinearAdjVal, 32.745033

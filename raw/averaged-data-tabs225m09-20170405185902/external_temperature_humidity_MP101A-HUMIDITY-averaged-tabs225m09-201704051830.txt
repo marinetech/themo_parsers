@@ -1,1 +1,0 @@
-[2017-04-05 18:32:18.000] external_humidity AvgVal, 2045.599976, AvgVolt, -0.006105, AvgLinearAdjVal, -0.610501

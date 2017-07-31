@@ -1,1 +1,0 @@
-[2017-04-05 19:59:07.809] adcp_voltage AvgVal, 2045.199951, AvgVolt, -0.006105, AvgLinearAdjVal, -0.073260

@@ -1,1 +1,0 @@
-[2017-04-05 18:33:07.560] system_voltage AvgVal, 3000.199951, AvgVolt, 2.326007, AvgLinearAdjVal, 4.652015

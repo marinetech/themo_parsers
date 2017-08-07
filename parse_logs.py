@@ -6,17 +6,25 @@ from bson import Binary, Code
 from parsers import *
 from dbutils import *
 
+from parsers_lib.dcs import *
+from parsers_lib.mp101a import *
+from parsers_lib.vaisala import *
+from parsers_lib.windsonic import *
+from parsers_lib.microcat import *
+from parsers_lib.metpak import *
+from parsers_lib.flntu import *
+from parsers_lib.s9 import *
+
 
 
 #---------- global variables -----------#
 
-#dict_sensors = {}
 logs_dir = "/home/ilan/Downloads/tabs225m09_sea"
 archive_dir = logs_dir + "/archive"
 
 
 
-#-------- helpers ------------#
+#-------- functions ------------#
 
 def get_sensor_id(sensor_name):
     if (sensor_name in dict_sensors):
@@ -41,47 +49,36 @@ def identify_and_route_to_parser():
     dict_log_types["metpak-averaged"] = "metpak"
     dict_log_types["dcs-averaged"] = "dcs"
     dict_log_types["wetlabs_flntu-averaged"] = "flntu"
-    dict_log_types["eplab-pyranometer-spp-averaged"] = "spp"
-    dict_log_types["eplab-radiometer-spp-averaged"] = "pir"
-    dict_log_types["external_temperature_humidity_MP101A-HUMIDITY-averaged"] = "mp101a"
-    dict_log_types["external_temperature_humidity_MP101A-TEMPERATURE-averaged"] = "mp101a"
+    dict_log_types["external_temperature_humidity_MP101A-HUMIDITY-averaged"] = "mp101a_humidity"
+    dict_log_types["external_temperature_humidity_MP101A-TEMPERATURE-averaged"] = "mp101a_temprature"
     dict_log_types["microcat-averaged"] = "microcat"
     dict_log_types["vaisala-ptb-210-barometer-averaged"] = "barometer"
     dict_log_types["windsonic-averaged"] = "windsonic"
+    dict_log_types["sound_nine_ultimodem-averaged"] = "s9"
 
-    # the following are all the logs that should not be parsed, or we don't know how to parse at this point
-    dict_ignore = {}
-    dict_ignore["adcp_voltage-averaged"] = ""
-    dict_ignore["compass-averaged"] = ""
-    dict_ignore["humidity_internal-averaged"] = ""
-    dict_ignore["gps_time-averaged"] = ""
-    dict_ignore["eb505gps-averaged"] = ""
-    dict_ignore["sound_nine_ultimodem-averaged"] = "" # unclear!!
-    dict_ignore["microstrain_gx3-25-averaged"] = ""  # unclear!!
-    dict_ignore["ad2cp-averaged"] = ""  # BINARY!!
-    dict_ignore["ad2cp-telemetry"] = ""  # unclear !!
+    #dict_log_types["eplab-pyranometer-spp-averaged"] = "spp"
+    #dict_log_types["eplab-radiometer-spp-averaged"] = "pir"
+
 
 
     #every file in our log dir
     for log in glob.glob(logs_dir + "/*.txt"):
-        #print(log)
-        print("parsing " + os.path.basename(log))
-        flag_continue = False
+        flag_was_parsed = False
         log_base_name = os.path.basename(log)
-
-        #some logs will be ignored for now
-        for key in dict_ignore.keys():
-            if log_base_name.startswith(key):
-                flag_continue = True
-        if flag_continue:
-            continue
 
         #match file name with each of the keys in dict_log_types
         for key in dict_log_types.keys():
             if log_base_name.startswith(key):
+                print("\n-I- parsing " + log)
+                #print("parsing " + os.path.basename(log))
                 sensor_name = dict_log_types[key]
                 route_to_parser(log, sensor_name)
+                flag_was_parsed = True
         #break
+
+        if not flag_was_parsed:
+            if "averaged" in log_base_name:
+                print("-W- log was ignored: " + log_base_name)
 
 
 def route_to_parser(log, sensor_name):
@@ -91,9 +88,11 @@ def route_to_parser(log, sensor_name):
         #try:
             json_data = globals()[parser](log, sensor_name, sensor_id)
             print("\n\n---{}---\n".format(parser))
-            for document in json_data:
-                insert_samples(document)
-                print(document)
+            if json_data != None:
+                for document in json_data:
+                    insert_samples(document)
+                    print(document)
+                    print()
         # except:
         #     print()
         #     print("-E- " +  parser + " is missing?")
@@ -107,6 +106,7 @@ def route_to_parser(log, sensor_name):
 
 
 #-----------------------------------------Main Body--------------------------------------------------#
+
 
 init_db()
 extract_compressed_logs()

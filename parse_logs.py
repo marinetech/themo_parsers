@@ -3,7 +3,7 @@ import glob
 from pymongo import MongoClient
 from bson import Binary, Code
 
-from parsers import *
+#from parsers import *
 from dbutils import *
 
 from parsers_lib.dcs import *

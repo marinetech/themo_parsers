@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from bson import Binary, Code
 from bson.json_util import loads
+import json
 
 dict_sensors = {}
 
@@ -26,6 +27,14 @@ def insert_samples(document):
 
 
 def get_s9_sensors():
-    filter = {'name':'s9'}
-    s9 = db.sensors.find(filter)
-    return s9[0]["child_sensors"]
+    init_db()
+    #s9_dict = {}
+    filter = {}
+    filter["name"] = "s9"
+    return db.sensors.find(filter)[0]["child_sensors"]
+    # s9 = db.sensors.find(filter)
+    # child_sensors = s9[0]["child_sensors"]
+    # for i in child_sensors:
+    #     #print(i)
+    #     s9_dict.update(i)
+    # print(s9_dict)

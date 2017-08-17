@@ -8,7 +8,7 @@ import io
 def get_dept(s9_id):
     print("calculating depth for " + s9_id)
     if not s9_id in s9_dict:
-        retun 0
+        return 0
 
     refernce_depth = s9_dict('A00W')
 
@@ -17,7 +17,7 @@ def get_dept(s9_id):
 def s9_parser(s9_log, sensor_name, sensor_id):
    data = {}
    json_data = []
-   global s9_dict = {}
+   global s9_dict; s9_dict = {}
    for s in get_s9_sensors():
        s9_dict.update(s)
 
@@ -48,36 +48,47 @@ def s9_parser(s9_log, sensor_name, sensor_id):
             if len(line.split(',')) < 11:
                 continue
 
-            print()
-            print(line)
+            # print()
+            # print(line)
 
             if (line.split(":")[1].split(",")[1]) == "ATPES":
                 line = line.split(":")[1].split(",")
             else: #ATE
                 line = line.split(",")
                 line[0] = line[0].split(":")[1] #getting rid of 'AT:' in 'AT:A016'
-                print(line[0])
-                print(line)
+                # print(line[0])
+                # print(line)
 
-            #line = line.split(":")[1].split(",")
-            s9_id = line[0]
-            s9_type = line[1]
-            s9_temprature = line[3]
-            s9_pressure = line[4]
-            s9_tilt = line[5]
-            s9_accel_x = line[8]
-            s9_accel_y = line[9]
-            s9_accel_z = line[10]
+
+            try:
+                s9_id = line[0]
+                if s9_id not in s9_dict:
+                    continue #because sometimes log is corrupted and we get a wrong S9 ID
+
+
+                s9_type = line[1]
+                s9_temprature = line[3]
+                s9_pressure = line[4]
+                s9_tilt = line[5]
+                s9_accel_x = line[8]
+                s9_accel_y = line[9]
+                s9_accel_z = line[10]
+            except:
+                print("-E- failed to parse " + str(line))
+                continue
 
             # The dictionary contains sensor_id as key name e.g. 'A015'
             # It's value is an array - element0 is accumulated tempratures and element1 is number os temprature samples.
             # so when we finish, element0/element1 will give the average tempratue
-            if s9_id in s9_samples_dict:
-                temprature_sum = s9_samples_dict[s9_id][0] + float(s9_temprature) #add the new temprature
-                samples_count = s9_samples_dict[s9_id][1] + 1 #increase samples count
-                s9_samples_dict[s9_id] = [temprature_sum, samples_count] #and update dictionary
-            else:
-                s9_samples_dict[s9_id] = [float(s9_temprature), 1] #first sample for this sensor
+            try:
+                if s9_id in s9_samples_dict:
+                    temprature_sum = s9_samples_dict[s9_id][0] + float(s9_temprature) #add the new temprature
+                    samples_count = s9_samples_dict[s9_id][1] + 1 #increase samples count
+                    s9_samples_dict[s9_id] = [temprature_sum, samples_count] #and update dictionary
+                else:
+                    s9_samples_dict[s9_id] = [float(s9_temprature), 1] #first sample for this sensor
+            except:
+                continue
 
 
    fo.close()

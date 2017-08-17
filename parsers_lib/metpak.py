@@ -13,18 +13,22 @@ def metpak_parser(metpak_log, sensor_name, sensor_id):
         data["sensor_id"] = sensor_id
         data["source"] = metpak_log
 
-        d_stamp = clean_str(line.split(' ')[0])
-        data["d_stamp"] = d_stamp
+        try:
+            d_stamp = clean_str(line.split(' ')[0])
+            data["d_stamp"] = d_stamp
 
-        t_stamp = clean_str(line.split(' ')[1])
-        data["t_stamp"] = format_time(t_stamp)
+            t_stamp = clean_str(line.split(' ')[1])
+            data["t_stamp"] = format_time(t_stamp)
 
-        rest_of_the_line = line.split(']')[1].strip()
-        fields = rest_of_the_line.split(',')
-        i = 0
-        while (i < len(fields)):
-            data[headers[i]] = fields[i].strip()
-            i += 1
-        json_data.append(json.dumps(data))
+            rest_of_the_line = line.split(']')[1].strip()
+            fields = rest_of_the_line.split(',')
+            i = 0
+            while (i < len(fields)):
+                data[headers[i]] = fields[i].strip()
+                i += 1
+            json_data.append(json.dumps(data))
+        except:
+            print("-E- failes to parse: " + line)
+
     fo.close()
     return json_data

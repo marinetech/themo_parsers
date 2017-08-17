@@ -19,7 +19,7 @@ from parsers_lib.s9 import *
 
 #---------- global variables -----------#
 
-logs_dir = "/home/ilan/Downloads/tabs225m09_sea"
+logs_dir = "/home/ilan/sea"
 archive_dir = logs_dir + "/archive"
 
 

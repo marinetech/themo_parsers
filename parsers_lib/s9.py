@@ -4,10 +4,20 @@ import json
 from bson.json_util import dumps
 import io
 
+
+def get_dept(s9_id):
+    print("calculating depth for " + s9_id)
+    if not s9_id in s9_dict:
+        retun 0
+
+    refernce_depth = s9_dict('A00W')
+
+
+
 def s9_parser(s9_log, sensor_name, sensor_id):
    data = {}
    json_data = []
-   s9_dict = {}
+   global s9_dict = {}
    for s in get_s9_sensors():
        s9_dict.update(s)
 
@@ -30,8 +40,6 @@ def s9_parser(s9_log, sensor_name, sensor_id):
    fo = io.open(s9_log,'r',encoding='utf-8',errors='ignore')
    for line in fo:
         if line.startswith("AT:"):
-            print()
-            print(line)
 
             #get rid of the checksun at the end e.g. *13*44402,32*
             line = line.split("*")[0] #get rid of the checksun at the end e.g. *13*44402,32*
@@ -39,6 +47,9 @@ def s9_parser(s9_log, sensor_name, sensor_id):
             # ignore ileagal lines...
             if len(line.split(',')) < 11:
                 continue
+
+            print()
+            print(line)
 
             if (line.split(":")[1].split(",")[1]) == "ATPES":
                 line = line.split(":")[1].split(",")
@@ -71,16 +82,24 @@ def s9_parser(s9_log, sensor_name, sensor_id):
 
    fo.close()
 
+
+   s9_samples_list = []
    for s in s9_samples_dict:
+
        avg_temprature = round(s9_samples_dict[s][0] / s9_samples_dict[s][1], 2)
        depth = s9_dict[s]
 
        data["s9_id"] = s
        data["temprature"] = avg_temprature
        data["depth"] = depth
-   json_data.append(dumps(data))
-   return json_data
-   #return None
+
+       json_data.append(dumps(data))
+
+
+   if len(s9_samples_dict) > 0:
+        return json_data
+   else:
+        return None
 
 
 #s9_parser("/home/ilan/Downloads/tabs225m09_sea/sound_nine_ultimodem-averaged-tabs225m09-201707251300.txt", "s9", 456)

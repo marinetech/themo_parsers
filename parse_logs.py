@@ -90,8 +90,8 @@ def route_to_parser(log, sensor_name):
             print("\n\n---{}---\n".format(parser))
             if json_data != None:
                 for document in json_data:
-                    insert_samples(document)
                     print(document)
+                    insert_samples(document)
                     print()
         # except:
         #     print()

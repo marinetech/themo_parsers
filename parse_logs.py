@@ -14,6 +14,7 @@ from parsers_lib.microcat import *
 from parsers_lib.metpak import *
 from parsers_lib.flntu import *
 from parsers_lib.s9 import *
+from parsers_lib.microstrain import *
 
 
 
@@ -55,6 +56,7 @@ def identify_and_route_to_parser():
     dict_log_types["vaisala-ptb-210-barometer-averaged"] = "barometer"
     dict_log_types["windsonic-averaged"] = "windsonic"
     dict_log_types["sound_nine_ultimodem-averaged"] = "s9"
+    dict_log_types["microstrain_gx3-25-averaged"] = "waves"
 
     #dict_log_types["eplab-pyranometer-spp-averaged"] = "spp"
     #dict_log_types["eplab-radiometer-spp-averaged"] = "pir"

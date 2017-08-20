@@ -7,7 +7,7 @@ from bson.json_util import dumps
 def microcat_parser(microcat_log, sensor_name, sensor_id):
     data = {}
     json_data = []
-    headers = ["field1", "field2", "field3"]
+    headers = ["Temprature", "Conductivity", "Salinity"]
     fo = open(microcat_log)
     for line in fo:
         # e.g. [2017-07-24 22:01:14.129] MICROCAT   28.0474,  0.00004,   0.0130

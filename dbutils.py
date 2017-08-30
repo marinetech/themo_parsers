@@ -4,22 +4,24 @@ from bson.objectid import ObjectId
 from bson.json_util import loads
 
 dict_sensors = {}
+buoy_id = ""
 
 
 def init_db():
     global client; client = MongoClient()
     global db; db = client.themo
 
-    for buoy in db.buoys.find():
-        global buoy_id; buoy_id = str(buoy["_id"])
-        global buoy_name; buoy_name = buoy["name"]
-        print(buoy_name)
-        print(buoy_id)
 
-        filter = {}
-        filter["buoy_name"] = buoy_name
-        for sensor in db.sensors.find(filter):
-            dict_sensors[sensor["name"]] = sensor["_id"]
+def init_buoy(buoy_name):
+    filter = {}
+    filter["name"] = buoy_name
+    global buoy_id; buoy_id = db.buoys.find_one(filter)["_id"]
+
+    dict_sensors.clear()
+    filter = {}
+    filter["buoy_name"] = buoy_name
+    for sensor in db.sensors.find(filter):
+        dict_sensors[sensor["name"]] = sensor["_id"]
 
 
 def insert_samples(document):

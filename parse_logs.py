@@ -15,14 +15,20 @@ from parsers_lib.metpak import *
 from parsers_lib.flntu import *
 from parsers_lib.s9 import *
 from parsers_lib.microstrain import *
+from parsers_lib.ad2cp import *
+
 
 
 
 #---------- global variables -----------#
+parse_info = [
+                ("/home/ilan/sea", "/home/ilan/sea/archive", "tabs225m09"),
+                ("/home/tabs225m09", "/mnt/themo/tabs225m09_archive", "tabs225m09"),
+                ("/home/tabs225m10", "/mnt/themo/tabs225m10_archive", "tabs225m10")
+             ]
 
-logs_dir = "/home/ilan/sea"
-archive_dir = logs_dir + "/archive"
-
+# logs_dir = "/home/ilan/sea"
+# archive_dir = logs_dir + "/archive"
 
 
 #-------- functions ------------#
@@ -57,6 +63,7 @@ def identify_and_route_to_parser():
     dict_log_types["windsonic-averaged"] = "windsonic"
     dict_log_types["sound_nine_ultimodem-averaged"] = "s9"
     dict_log_types["microstrain_gx3-25-averaged"] = "waves"
+    # dict_log_types["ad2cp-averaged"] = "adcp"
 
     #dict_log_types["eplab-pyranometer-spp-averaged"] = "spp"
     #dict_log_types["eplab-radiometer-spp-averaged"] = "pir"
@@ -111,5 +118,12 @@ def route_to_parser(log, sensor_name):
 
 
 init_db()
-extract_compressed_logs()
-identify_and_route_to_parser()
+for tpl in parse_info:
+    logs_dir = (tpl[0])
+    archive_dir = (tpl[1])
+    buoy = (tpl[2])
+    if os.path.isdir(logs_dir):
+        print("-I- Found " + logs_dir)
+        init_buoy(buoy)
+        extract_compressed_logs()
+        identify_and_route_to_parser()

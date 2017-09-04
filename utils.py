@@ -1,6 +1,8 @@
 import os
+import time
 from datetime import date
 from datetime import datetime
+import socket
 
 def clean_str(str):
     ret = str
@@ -35,3 +37,28 @@ def extract_date_time_from_file_name(log):
     str_time = hour + ":" + minutes + ":" + "00"
 
     return[str_date, str_time]
+
+
+def print_log(msg, log, prefix="-I- "):
+    log_location = os.path.dirname(log)
+    if not os.path.exists(log_location):
+        os.mkdir(log_location)
+    with open(log, "a") as f:
+        f.write(prefix + msg + "\n")
+    print(prefix + " " + msg)
+
+
+
+def init_log(log):
+    print_log("+++++++++++++++++++++++THEMO PARSER+++++++++++++++++++++++++", log, "")
+    print_log("", log, "")
+    print_log("start time: " + now(), log, "")
+    print_log("running on: " + socket.gethostname(), log, "")
+    print_log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", log, "")
+
+
+
+def now():
+    curret_date = time.strftime("%x").replace("/", "")
+    current_time = time.strftime("%X").replace(":", "")
+    return curret_date + "_" + current_time

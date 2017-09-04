@@ -1,5 +1,6 @@
 import os
 import glob
+import time
 from pymongo import MongoClient
 from bson import Binary, Code
 
@@ -22,13 +23,11 @@ from parsers_lib.ad2cp import *
 
 #---------- global variables -----------#
 parse_info = [
-                ("/home/ilan/sea", "/home/ilan/sea/archive", "tabs225m09"),
-                ("/home/tabs225m09", "/mnt/themo/tabs225m09_archive", "tabs225m09"),
-                ("/home/tabs225m10", "/mnt/themo/tabs225m10_archive", "tabs225m10")
+                # "dir with buoy logs", "where to archive processed logs", "which buoy is associated to that location, "where to write the log for this script"
+                ("/home/ilan/sea", "/home/ilan/sea/archive", "tabs225m09", "/home/ilan/sea/logs"),
+                ("/home/tabs225m09", "/mnt/themo/tabs225m09_archive", "tabs225m09", "/mnt/themo/logs"),
+                ("/home/tabs225m10", "/mnt/themo/tabs225m10_archive", "tabs225m10", "/mnt/themo/logs")
              ]
-
-# logs_dir = "/home/ilan/sea"
-# archive_dir = logs_dir + "/archive"
 
 
 #-------- functions ------------#
@@ -40,17 +39,19 @@ def get_sensor_id(sensor_name):
         return None
 
 
-def extract_compressed_logs():
+def extract_compressed_logs(plog):
     if not os.path.exists(archive_dir):
+        print_log("mkdir " + archive_dir, plog)
         os.mkdir(archive_dir)
 
-    for log in glob.glob(logs_dir + "/*.7z"):
+    for log in glob.glob(buoy_logs_dir + "/*.7z"):
         archived_log = archive_dir + "/" + os.path.basename(log)
-        os.system( '7z x ' + log + ' -aoa -o' + logs_dir )
+        print_log("extracting " + os.path.basename(log), plog)
+        os.system( '7z x ' + log + ' -aoa -o' + buoy_logs_dir )
         os.rename(log, archived_log)
 
 
-def identify_and_route_to_parser():
+def identify_and_route_to_parser(plog):
     # the following are all the logs that should be parsed
     dict_log_types = {}
     dict_log_types["metpak-averaged"] = "metpak"
@@ -71,32 +72,32 @@ def identify_and_route_to_parser():
 
 
     #every file in our log dir
-    for log in glob.glob(logs_dir + "/*.txt"):
+    for log in glob.glob(buoy_logs_dir + "/*.txt"):
         flag_was_parsed = False
         log_base_name = os.path.basename(log)
 
         #match file name with each of the keys in dict_log_types
         for key in dict_log_types.keys():
             if log_base_name.startswith(key):
-                print("\n-I- parsing " + log)
+                print_log("\n-I- parsing " + log, plog)
                 #print("parsing " + os.path.basename(log))
                 sensor_name = dict_log_types[key]
-                route_to_parser(log, sensor_name)
+                route_to_parser(log, sensor_name, plog)
                 flag_was_parsed = True
         #break
 
         if not flag_was_parsed:
             if "averaged" in log_base_name:
-                print("-W- log was ignored: " + log_base_name)
+                print_log("-W- log was ignored: " + log_base_name, plog)
 
 
-def route_to_parser(log, sensor_name):
+def route_to_parser(log, sensor_name, plog):
     parser = sensor_name + "_parser"
     sensor_id = get_sensor_id(sensor_name)
     if sensor_id:
         #try:
             json_data = globals()[parser](log, sensor_name, sensor_id)
-            print("\n\n---{}---\n".format(parser))
+            print_log("\n\n---{}---\n".format(parser), plog, "")
             if json_data != None:
                 for document in json_data:
                     print(document)
@@ -108,8 +109,8 @@ def route_to_parser(log, sensor_name):
         #     print()
         #     exit(1)
     else:
-        print()
-        print("-E- unknown sensor: " + sensor_name)
+        print_log("", plog, "")
+        print_log("-E- unknown sensor: " + sensor_name, plog, "-E-")
         exit(1)
 
 
@@ -119,11 +120,15 @@ def route_to_parser(log, sensor_name):
 
 init_db()
 for tpl in parse_info:
-    logs_dir = (tpl[0])
-    archive_dir = (tpl[1])
-    buoy = (tpl[2])
-    if os.path.isdir(logs_dir):
-        print("-I- Found " + logs_dir)
+    buoy_logs_dir = tpl[0]
+    archive_dir = tpl[1]
+    buoy = tpl[2]
+    log_dir = tpl[3]
+    log = log_dir + "/" + buoy + '_' + now()
+
+    if os.path.isdir(buoy_logs_dir):
+        init_log(log)
+        print_log("inspecting: " + buoy_logs_dir, log)
         init_buoy(buoy)
-        extract_compressed_logs()
-        identify_and_route_to_parser()
+        extract_compressed_logs(log)
+        identify_and_route_to_parser(log)

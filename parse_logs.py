@@ -134,12 +134,15 @@ for tpl in parse_info:
     buoy_logs_dir = tpl[0]
     archive_dir = tpl[1]
     buoy = tpl[2]
-    log_dir = tpl[3]
-    log = log_dir + "/" + buoy + '_' + now()
+    plog_dir = tpl[3]
+    plog = plog_dir + "/" + buoy + '_' + now()
 
     if os.path.isdir(buoy_logs_dir):
-        init_log(log)
-        print_log("inspecting: " + buoy_logs_dir, log)
-        init_buoy(buoy)
-        extract_compressed_logs(log)
-        identify_and_route_to_parser(log)
+        init_log(plog)
+        print_log("inspecting: " + buoy_logs_dir, plog)
+        try:
+            init_buoy(buoy)
+            extract_compressed_logs(plog)
+            identify_and_route_to_parser(plog)
+        except:
+            print_log("failed to handle buoy: " + buoy, plog, "-E-")

@@ -45,12 +45,15 @@ def extract_compressed_logs(plog):
         print_log("mkdir " + archive_dir, plog)
         os.mkdir(archive_dir)
 
-    for log in glob.glob(buoy_logs_dir + "/*.7z"):
-        archived_log = archive_dir + "/" + os.path.basename(log)
-        print_log("extracting " + os.path.basename(log), plog)
-        os.system( '7z x ' + log + ' -aoa -o' + buoy_logs_dir )
+    for zip in glob.glob(buoy_logs_dir + "/*.7z"):
+        archived_log = archive_dir + "/" + os.path.basename(zip)
+        print_log("extracting " + os.path.basename(zip), plog)
+        os.system( '7z x ' + zip + ' -aoa -o' + buoy_logs_dir )
         #os.rename(log, archived_log)
-        shutil.move(log, archived_log)
+        try:
+            shutil.move(zip, archived_log)
+        except:
+            print_log("failed to move zip" + zip, plog, "-E-")
 
 
 def identify_and_route_to_parser(plog):

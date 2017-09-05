@@ -1,4 +1,5 @@
 import os
+import shutil
 import glob
 import time
 from pymongo import MongoClient
@@ -48,7 +49,8 @@ def extract_compressed_logs(plog):
         archived_log = archive_dir + "/" + os.path.basename(log)
         print_log("extracting " + os.path.basename(log), plog)
         os.system( '7z x ' + log + ' -aoa -o' + buoy_logs_dir )
-        os.rename(log, archived_log)
+        #os.rename(log, archived_log)
+        shutil.move(log, archived_log)
 
 
 def identify_and_route_to_parser(plog):

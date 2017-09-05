@@ -91,6 +91,7 @@ def identify_and_route_to_parser(plog):
         if not flag_was_parsed:
             if "averaged" in log_base_name:
                 print_log("-W- log was ignored: " + log_base_name, plog)
+                os.remove(log)
 
 
 def route_to_parser(log, sensor_name, plog):
@@ -100,6 +101,7 @@ def route_to_parser(log, sensor_name, plog):
         #try:
             json_data = globals()[parser](log, sensor_name, sensor_id)
             print_log("\n\n---{}---\n".format(parser), plog, "")
+            os.remove(log)
             if json_data != None:
                 for document in json_data:
                     print(document)

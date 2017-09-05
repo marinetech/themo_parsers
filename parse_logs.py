@@ -81,7 +81,7 @@ def identify_and_route_to_parser(plog):
         #match file name with each of the keys in dict_log_types
         for key in dict_log_types.keys():
             if log_base_name.startswith(key):
-                print_log("\n-I- parsing " + log, plog)
+                print_log("\nparsing " + log, plog)
                 #print("parsing " + os.path.basename(log))
                 sensor_name = dict_log_types[key]
                 route_to_parser(log, sensor_name, plog)
@@ -90,8 +90,12 @@ def identify_and_route_to_parser(plog):
 
         if not flag_was_parsed:
             if "averaged" in log_base_name:
-                print_log("-W- log was ignored: " + log_base_name, plog)
-                os.remove(log)
+                print_log("log was ignored: " + log_base_name, plog, "-W-")
+                try:
+                    os.remove(log)
+                except:
+                    print_log("failed to remove: " + log, plog, "-E-")
+
 
 
 def route_to_parser(log, sensor_name, plog):

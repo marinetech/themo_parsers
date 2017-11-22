@@ -67,12 +67,12 @@ def s9_parser(s9_log, sensor_name, sensor_id):
 
 
                 s9_type = line[1]
-                s9_temprature = line[3]
-                s9_pressure = line[4]
-                s9_tilt = line[5]
-                s9_accel_x = line[8]
-                s9_accel_y = line[9]
-                s9_accel_z = line[10]
+                s9_temprature = float(line[3])
+                s9_pressure = float(line[4])
+                s9_tilt = float(line[5])
+                s9_accel_x = float(line[8])
+                s9_accel_y = float(line[9])
+                s9_accel_z = float(line[10])
             except:
                 print("-E- failed to parse " + str(line))
                 continue
@@ -101,7 +101,7 @@ def s9_parser(s9_log, sensor_name, sensor_id):
        depth = s9_dict[s]
 
        data["s9_id"] = s
-       data["temprature"] = avg_temprature
+       data["temperature"] = avg_temprature
        data["depth"] = depth
 
        json_data.append(dumps(data))

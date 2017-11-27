@@ -21,7 +21,10 @@ def mp101a_humidity_parser(humidity_log, sensor_name, sensor_id):
         fields = rest_of_the_line.split(',')
         i = 0
         while (i < len(fields)):
-            data[fields[i].strip().replace(' ', '_')] = fields[i+1].strip()
+            try:
+                data[fields[i].strip().replace(' ', '_')] = float(fields[i+1].strip())
+            except:
+                return None
             i += 2
         #json_data.append(json.dumps(data))
         json_data.append(dumps(data))

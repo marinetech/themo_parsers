@@ -28,9 +28,12 @@ def waves_parser(microstrain_log, sensor_name, sensor_id):
             t_stamp = clean_str(arr_line[1])
             data["t_stamp"] = format_time(t_stamp)
 
-            data["significant_height"] = arr_line[5]
-            data["mean_period"] = arr_line[8]
-            data["dominant_period"] = arr_line[11]
+            try:
+                data["significant_height"] = float(arr_line[5])
+                data["mean_period"] = float(arr_line[8])
+                data["dominant_period"] = float(arr_line[11])
+            except:
+                continue
 
             json_data.append(json.dumps(data))
             break

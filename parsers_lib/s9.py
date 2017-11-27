@@ -67,12 +67,12 @@ def s9_parser(s9_log, sensor_name, sensor_id):
 
 
                 s9_type = line[1]
-                s9_temprature = float(line[3])
-                s9_pressure = float(line[4])
-                s9_tilt = float(line[5])
-                s9_accel_x = float(line[8])
-                s9_accel_y = float(line[9])
-                s9_accel_z = float(line[10])
+                s9_temprature = line[3]
+                s9_pressure = line[4]
+                s9_tilt = line[5]
+                s9_accel_x = line[8]
+                s9_accel_y = line[9]
+                s9_accel_z = line[10]
             except:
                 print("-E- failed to parse " + str(line))
                 continue
@@ -114,3 +114,8 @@ def s9_parser(s9_log, sensor_name, sensor_id):
 
 
 #s9_parser("/home/ilan/Downloads/tabs225m09_sea/sound_nine_ultimodem-averaged-tabs225m09-201707251300.txt", "s9", 456)
+
+if __name__ == "__main__":
+    init_db()
+    s9_log = '/home/ilan/sea/sound_nine_ultimodem-averaged-tabs225m09-201707281130.txt'
+    s9_parser(s9_log, "s9", 456)

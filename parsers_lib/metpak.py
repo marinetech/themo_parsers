@@ -23,12 +23,18 @@ def metpak_parser(metpak_log, sensor_name, sensor_id):
             rest_of_the_line = line.split(']')[1].strip()
             fields = rest_of_the_line.split(',')
 
-            data["wind_direction"] = get_winddirection(get_compass_file_name(metpak_log))
+            try:
+                data["wind_direction"] = float(get_winddirection(get_compass_file_name(metpak_log)))
+            except:
+                return None
 
             i = 2
-            while (i < len(fields)):
-                data[headers[i]] = fields[i].strip()
-                i += 1
+            while (i < len(headers)-1):
+                try:
+                    data[headers[i]] = float(fields[i].strip())
+                    i += 1
+                except:
+                    return None
             json_data.append(json.dumps(data))
         except:
             print("-E- failes to parse: " + line)

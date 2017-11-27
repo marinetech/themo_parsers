@@ -24,7 +24,7 @@ def microcat_parser(microcat_log, sensor_name, sensor_id):
         fields = line.split('MICROCAT')[1].split(',')
         i = 0
         while (i < len(fields)):
-            data[headers[i]] = fields[i].strip()
+            data[headers[i]] = float(fields[i].strip())
             i += 1
         json_data.append(json.dumps(data))
     fo.close()

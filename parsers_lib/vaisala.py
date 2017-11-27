@@ -19,8 +19,11 @@ def barometer_parser(vaisala_log, sensor_name, sensor_id):
         t_stamp = clean_str(fields[1])
         data["t_stamp"] = format_time(t_stamp)
 
-        data[fields[2]] = fields[3]
-        
+        try:
+            data[fields[2]] = float(fields[3])
+        except:
+            continue
+
         json_data.append(json.dumps(data))
     fo.close()
     return json_data

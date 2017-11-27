@@ -22,8 +22,8 @@ def flntu_parser(flntu_log, sensor_name, sensor_id):
         data["t_stamp"] = format_time(t_stamp)
         fields = line.split()[5:] #takes only the relavant numbers from field 5
 
-        data["chlorophyll_concentration"] = flntu_calibration["chl_sf"] * (int(fields[1]) - flntu_calibration["chl_dark_count"])
-        data["turbidity_units"] = flntu_calibration["ntu_sf"] * (int(fields[3]) - flntu_calibration["ntu_dark_count"])
+        data["chlorophyll_concentration"] = flntu_calibration["chl_sf"] * (float(fields[1]) - flntu_calibration["chl_dark_count"])
+        data["turbidity_units"] = flntu_calibration["ntu_sf"] * (float(fields[3]) - flntu_calibration["ntu_dark_count"])
 
 
         if  __name__ == "__main__":

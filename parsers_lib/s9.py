@@ -39,7 +39,8 @@ def s9_parser(s9_log, sensor_name, sensor_id):
 
    fo = io.open(s9_log,'r',encoding='utf-8',errors='ignore')
    for line in fo:
-        if line.startswith("AT:"):
+
+        if line.startswith("AT:") or line.startswith("APT:"):
 
             #get rid of the checksun at the end e.g. *13*44402,32*
             line = line.split("*")[0] #get rid of the checksun at the end e.g. *13*44402,32*
@@ -117,5 +118,5 @@ def s9_parser(s9_log, sensor_name, sensor_id):
 
 if __name__ == "__main__":
     init_db()
-    s9_log = '/home/ilan/sea/sound_nine_ultimodem-averaged-tabs225m09-201707281130.txt'
+    s9_log = '/home/ilan/temp/sound_nine_ultimodem-averaged-tabs225m09-201711290530.txt'
     s9_parser(s9_log, "s9", 456)

@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 import glob
 import time
@@ -17,7 +18,7 @@ from parsers_lib.metpak import *
 from parsers_lib.flntu import *
 from parsers_lib.s9 import *
 from parsers_lib.microstrain import *
-from parsers_lib.ad2cp import *
+from parsers_lib.adcp import *
 
 
 
@@ -29,6 +30,8 @@ parse_info = [
                 ("/home/tabs225m09", "/mnt/themo/tabs225m09_archive", "tabs225m09", "/mnt/themo/logs"),
                 ("/home/tabs225m10", "/mnt/themo/tabs225m10_archive", "tabs225m10", "/mnt/themo/logs")
              ]
+
+debug_mode = False
 
 
 #-------- functions ------------#
@@ -69,7 +72,7 @@ def identify_and_route_to_parser(plog):
     dict_log_types["windsonic-averaged"] = "windsonic"
     dict_log_types["sound_nine_ultimodem-averaged"] = "s9"
     dict_log_types["microstrain_gx3-25-averaged"] = "waves"
-    # dict_log_types["ad2cp-averaged"] = "adcp"
+    dict_log_types["ad2cp-telemetry"] = "adcp"
 
     #dict_log_types["eplab-pyranometer-spp-averaged"] = "spp"
     #dict_log_types["eplab-radiometer-spp-averaged"] = "pir"
@@ -95,10 +98,10 @@ def identify_and_route_to_parser(plog):
             if "averaged" in log_base_name:
                 print_log("log was ignored: " + log_base_name, plog, "-W-")
                 try:
-                    os.remove(log)
+                    if not debug_mode:
+                        os.remove(log)
                 except:
                     print_log("failed to remove: " + log, plog, "-E-")
-
 
 
 def route_to_parser(log, sensor_name, plog):
@@ -108,7 +111,8 @@ def route_to_parser(log, sensor_name, plog):
         #try:
             json_data = globals()[parser](log, sensor_name, sensor_id)
             print_log("\n\n---{}---\n".format(parser), plog, "")
-            os.remove(log)
+            if not debug_mode:
+                os.remove(log)
             if json_data != None:
                 for document in json_data:
                     print(document)
@@ -128,6 +132,10 @@ def route_to_parser(log, sensor_name, plog):
 
 #-----------------------------------------Main Body--------------------------------------------------#
 
+# debug mode
+if len(sys.argv) > 1:
+    if sys.argv[1] == "-debug":
+        debug_mode = True
 
 init_db()
 for tpl in parse_info:

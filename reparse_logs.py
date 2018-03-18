@@ -18,6 +18,7 @@ from parsers_lib.flntu import *
 from parsers_lib.s9 import *
 from parsers_lib.microstrain import *
 from parsers_lib.adcp import *
+from parsers_lib.battery import *
 
 
 
@@ -68,7 +69,7 @@ def identify_and_route_to_parser(plog):
     # dict_log_types["windsonic-averaged"] = "windsonic"
     # dict_log_types["sound_nine_ultimodem-averaged"] = "s9"
     # dict_log_types["microstrain_gx3-25-averaged"] = "waves"
-    dict_log_types["ad2cp-telemetry"] = "adcp"
+    dict_log_types["battery"] = "battery"
 
     #dict_log_types["eplab-pyranometer-spp-averaged"] = "spp"
     #dict_log_types["eplab-radiometer-spp-averaged"] = "pir"
@@ -101,11 +102,15 @@ def identify_and_route_to_parser(plog):
 
 
 def route_to_parser(log, sensor_name, plog):
+    print("-D- starting route_to_parser")
     parser = sensor_name + "_parser"
+    print("-D- parser: " + parser)
     sensor_id = get_sensor_id(sensor_name)
+    print("-D- sensor_id: " + sensor_id)
     if sensor_id:
         #try:
             json_data = globals()[parser](log, sensor_name, sensor_id)
+
             print_log("\n\n---{}---\n".format(parser), plog, "")
             os.remove(log)
             if json_data != None:
@@ -127,7 +132,6 @@ def route_to_parser(log, sensor_name, plog):
 
 #-----------------------------------------Main Body--------------------------------------------------#
 
-
 init_db()
 for tpl in parse_info:
     buoy_logs_dir = tpl[0]
@@ -143,5 +147,6 @@ for tpl in parse_info:
             init_buoy(buoy)
             extract_compressed_logs(plog)
             identify_and_route_to_parser(plog)
-        except:
+        except Exception as e:
+            print("Exception: " + str(e))
             print_log("failed to handle buoy: " + buoy, plog, "-E-")

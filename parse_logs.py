@@ -19,6 +19,7 @@ from parsers_lib.flntu import *
 from parsers_lib.s9 import *
 from parsers_lib.microstrain import *
 from parsers_lib.adcp import *
+from parsers_lib.battery import *
 
 
 
@@ -62,17 +63,18 @@ def extract_compressed_logs(plog):
 def identify_and_route_to_parser(plog):
     # the following are all the logs that should be parsed
     dict_log_types = {}
-    dict_log_types["metpak-averaged"] = "metpak"
-    dict_log_types["dcs-averaged"] = "dcs"
-    dict_log_types["wetlabs_flntu-averaged"] = "flntu"
-    dict_log_types["external_temperature_humidity_MP101A-HUMIDITY-averaged"] = "mp101a_humidity"
-    dict_log_types["external_temperature_humidity_MP101A-TEMPERATURE-averaged"] = "mp101a_temprature"
-    dict_log_types["microcat-averaged"] = "microcat"
-    dict_log_types["vaisala-ptb-210-barometer-averaged"] = "barometer"
-    dict_log_types["windsonic-averaged"] = "windsonic"
-    dict_log_types["sound_nine_ultimodem-averaged"] = "s9"
-    dict_log_types["microstrain_gx3-25-averaged"] = "waves"
-    dict_log_types["ad2cp-telemetry"] = "adcp"
+    # dict_log_types["metpak-averaged"] = "metpak"
+    # dict_log_types["dcs-averaged"] = "dcs"
+    # dict_log_types["wetlabs_flntu-averaged"] = "flntu"
+    # dict_log_types["external_temperature_humidity_MP101A-HUMIDITY-averaged"] = "mp101a_humidity"
+    # dict_log_types["external_temperature_humidity_MP101A-TEMPERATURE-averaged"] = "mp101a_temprature"
+    # dict_log_types["microcat-averaged"] = "microcat"
+    # dict_log_types["vaisala-ptb-210-barometer-averaged"] = "barometer"
+    # dict_log_types["windsonic-averaged"] = "windsonic"
+    # dict_log_types["sound_nine_ultimodem-averaged"] = "s9"
+    # dict_log_types["microstrain_gx3-25-averaged"] = "waves"
+    # dict_log_types["ad2cp-telemetry"] = "adcp"
+    dict_log_types["battery_voltage"] = "battery"
 
     #dict_log_types["eplab-pyranometer-spp-averaged"] = "spp"
     #dict_log_types["eplab-radiometer-spp-averaged"] = "pir"

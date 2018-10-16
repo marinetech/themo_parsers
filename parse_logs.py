@@ -5,8 +5,6 @@ import glob
 import time
 from pymongo import MongoClient
 from bson import Binary, Code
-
-#from parsers import *
 from dbutils import *
 
 from parsers_lib.dcs import *
@@ -23,13 +21,13 @@ from parsers_lib.battery import *
 
 
 
-
 #---------- global variables -----------#
 parse_info = [
                 # "dir with buoy logs", "where to archive processed logs", "which buoy is associated to that location, "where to write the log for this script"
-                ("/home/ilan/sea", "/home/ilan/sea/archive", "tabs225m09", "/home/ilan/sea/logs"),
+                ("/home/ilan/Desktop/tabsbuoy09", "/home/ilan/Desktop/tabsbuoy09/archive", "tabs225m09", "/home/ilan/Desktop/tabsbuoy09/logs"),
                 ("/home/tabs225m09", "/mnt/themo/tabs225m09_archive", "tabs225m09", "/mnt/themo/logs"),
-                ("/home/tabs225m10", "/mnt/themo/tabs225m10_archive", "tabs225m10", "/mnt/themo/logs")
+                ("/home/tabs225m10", "/mnt/themo/tabs225m10_archive", "tabs225m09", "/mnt/themo/logs"),
+                ("/home/ilan/sea_", "/home/ilan/sea/tabs225m10_archive", "tabs225m09", "/home/ilan/sea/logs")
              ]
 
 debug_mode = False
@@ -63,18 +61,21 @@ def extract_compressed_logs(plog):
 def identify_and_route_to_parser(plog):
     # the following are all the logs that should be parsed
     dict_log_types = {}
-    # dict_log_types["metpak-averaged"] = "metpak"
-    # dict_log_types["dcs-averaged"] = "dcs"
-    # dict_log_types["wetlabs_flntu-averaged"] = "flntu"
-    # dict_log_types["external_temperature_humidity_MP101A-HUMIDITY-averaged"] = "mp101a_humidity"
-    # dict_log_types["external_temperature_humidity_MP101A-TEMPERATURE-averaged"] = "mp101a_temprature"
-    # dict_log_types["microcat-averaged"] = "microcat"
-    # dict_log_types["vaisala-ptb-210-barometer-averaged"] = "barometer"
-    # dict_log_types["windsonic-averaged"] = "windsonic"
-    # dict_log_types["sound_nine_ultimodem-averaged"] = "s9"
-    # dict_log_types["microstrain_gx3-25-averaged"] = "waves"
-    # dict_log_types["ad2cp-telemetry"] = "adcp"
-    dict_log_types["battery_voltage"] = "battery"
+    dict_log_types["metpak-averaged"] = "metpak"
+    dict_log_types["dcs-averaged"] = "dcs"
+    dict_log_types["wetlabs_flntu-averaged"] = "flntu"
+    dict_log_types["external_temperature_humidity_MP101A-HUMIDITY-averaged"] = "mp101a_humidity"
+    dict_log_types["external_temperature_humidity_MP101A-TEMPERATURE-averaged"] = "mp101a_temprature"
+    dict_log_types["microcat-averaged"] = "microcat"
+    dict_log_types["vaisala-ptb-210-barometer-averaged"] = "barometer"
+    dict_log_types["windsonic-averaged"] = "windsonic"
+    dict_log_types["sound_nine_ultimodem-averaged"] = "s9"
+    dict_log_types["microstrain_gx3-25-averaged"] = "waves"
+    dict_log_types["ad2cp-telemetry"] = "adcp"
+    dict_log_types["battery_voltage1-averaged"] = "battery"
+    dict_log_types["battery_voltage2-averaged"] = "battery"
+    dict_log_types["battery_voltage3-averaged"] = "battery"
+
 
     #dict_log_types["eplab-pyranometer-spp-averaged"] = "spp"
     #dict_log_types["eplab-radiometer-spp-averaged"] = "pir"
@@ -119,6 +120,7 @@ def route_to_parser(log, sensor_name, plog):
                 for document in json_data:
                     print(document)
                     insert_samples(document)
+                    trigger_alert(json.loads(document)) #json to py dictionary
                     print()
         # except:
         #     print()
@@ -142,6 +144,8 @@ if len(sys.argv) > 1:
 init_db()
 for tpl in parse_info:
     buoy_logs_dir = tpl[0]
+    if debug_mode:
+        print("-D- buoy_logs_dir: " + buoy_logs_dir)
     archive_dir = tpl[1]
     buoy = tpl[2]
     plog_dir = tpl[3]

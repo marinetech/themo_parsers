@@ -47,3 +47,7 @@ def get_callibration_values(sensor_id):
     ret["ntu_sf"] = flntu[0]["ntu_sf"]
 
     return ret
+
+def find_subscribers(subscription):
+    filter = {"subscription": subscription}
+    return db.alarms.find(filter)

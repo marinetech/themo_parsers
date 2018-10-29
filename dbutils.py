@@ -50,4 +50,4 @@ def get_callibration_values(sensor_id):
 
 def find_subscribers(subscription):
     filter = {"subscription": subscription}
-    return db.alarms.find(filter)
+    return db.alerts.find(filter)

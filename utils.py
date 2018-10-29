@@ -95,7 +95,7 @@ def trigger_alert(doc):
     sensor = doc["sensor_id"]
     # go through alldata fields that are valid for alert
     for key in doc:
-        if key not in ("d_stamp", "t_stamp", "source", "sensor_id", "sensor_name"):
+        if key not in ("d_stamp", "t_stamp", "source", "sensor_id", "sensor_name", "threshold", "const_err"):
             subscription = sensor + "_" + key
             subscribers = find_subscribers(subscription)
             for subscriber in subscribers:

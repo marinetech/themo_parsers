@@ -76,6 +76,8 @@ def send_notification(receiver, objData):
         "Data Field: %s" % objData["measurement"],
         "Value: %s" % objData["value"],
         "Trigger: %s" % objData["trigger"],
+        "Date: %s" % objData["date"],
+        "Time (UTC): %s" % objData["time"],
         "",
         "",
         """
@@ -101,5 +103,7 @@ def trigger_alert(doc):
             for subscriber in subscribers:
                 print(subscriber)
                 if eval(subscriber["expression"].replace("$$VAL", str(doc[key]))):
-                    objData = {"trigger" : subscriber["expression"], "measurement" : key, "value" : str(doc[key]), "sensor_name" : doc["sensor_name"]}
+                    objData = {"trigger" : subscriber["expression"], "measurement" : key,
+                                "value" : str(doc[key]), "sensor_name" : doc["sensor_name"],
+                                    "date" : doc["d_stamp"], "time" : doc["t_stamp"]}
                     send_notification(subscriber["email"], objData)

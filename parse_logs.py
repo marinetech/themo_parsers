@@ -18,6 +18,9 @@ from parsers_lib.s9 import *
 from parsers_lib.microstrain import *
 from parsers_lib.adcp import *
 from parsers_lib.battery import *
+from parsers_lib.current import *
+from parsers_lib.system_volt import *
+from parsers_lib.disk_space import *
 
 
 
@@ -75,6 +78,14 @@ def identify_and_route_to_parser(plog):
     dict_log_types["battery_voltage1-averaged"] = "battery"
     dict_log_types["battery_voltage2-averaged"] = "battery"
     dict_log_types["battery_voltage3-averaged"] = "battery"
+    dict_log_types["charge_current1-averaged"] = "current"
+    dict_log_types["charge_current2-averaged"] = "current"
+    dict_log_types["charge_current3-averaged"] = "current"
+    dict_log_types["system_voltage-averaged"] = "system_volt"
+    dict_log_types["disk_space-log"] = "disk_space"
+
+
+
 
 
     #dict_log_types["eplab-pyranometer-spp-averaged"] = "spp"

@@ -61,7 +61,7 @@ def extract_compressed_logs(plog):
             print_log("failed to move zip" + zip, plog, "-E-")
 
 
-def identify_and_route_to_parser(plog):
+def identify_and_route_to_parser(plog, buoy):
     # the following are all the logs that should be parsed
     dict_log_types = {}
     dict_log_types["metpak-averaged"] = "metpak"
@@ -104,7 +104,7 @@ def identify_and_route_to_parser(plog):
                 print_log("\nparsing " + log, plog)
                 #print("parsing " + os.path.basename(log))
                 sensor_name = dict_log_types[key]
-                route_to_parser(log, sensor_name, plog)
+                route_to_parser(log, sensor_name, plog, buoy)
                 flag_was_parsed = True
         #break
 
@@ -118,7 +118,7 @@ def identify_and_route_to_parser(plog):
                     print_log("failed to remove: " + log, plog, "-E-")
 
 
-def route_to_parser(log, sensor_name, plog):
+def route_to_parser(log, sensor_name, plog, buoy):
     parser = sensor_name + "_parser"
     sensor_id = get_sensor_id(sensor_name)
     if sensor_id:
@@ -130,7 +130,7 @@ def route_to_parser(log, sensor_name, plog):
             if json_data != None:
                 for document in json_data:
                     print(document)
-                    insert_samples(document)
+                    insert_samples(document, buoy)
                     trigger_alert(json.loads(document)) #json to py dictionary
                     print()
         # except:
@@ -168,6 +168,6 @@ for tpl in parse_info:
         try:
             init_buoy(buoy)
             extract_compressed_logs(plog)
-            identify_and_route_to_parser(plog)
+            identify_and_route_to_parser(plog, buoy)            
         except:
             print_log("failed to handle buoy: " + buoy, plog, "-E-")

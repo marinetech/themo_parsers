@@ -24,8 +24,11 @@ def init_buoy(buoy_name):
         dict_sensors[sensor["name"]] = sensor["_id"]
 
 
-def insert_samples(document):
-    db.samples.insert_one(loads(document))
+def insert_samples(document, buoy):
+    json_doc = loads(document)
+    json_doc["buoy"] = buoy
+    # db.samples.insert_one(loads(document))
+    db.samples.insert_one(json_doc)
 
 
 def get_s9_sensors():
@@ -47,6 +50,7 @@ def get_callibration_values(sensor_id):
     ret["ntu_sf"] = flntu[0]["ntu_sf"]
 
     return ret
+
 
 def find_subscribers(subscription):
     filter = {"subscription": subscription}

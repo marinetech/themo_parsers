@@ -46,38 +46,6 @@ def adcp_wh_parser(adcp_log, sensor_name, sensor_id):
     return json_data
 
 
-
-    # fo = io.open(ad2cp_log,'r',encoding='utf-8',errors='ignore')
-    #
-    # # extracting the cell-size is a must. If faild there is no point to parse the data
-    # cell_size = get_cell_size(fo)
-    # if cell_size is None:
-    #     return None
-    # try:
-    #     data["cell_size"] = float(cell_size)
-    # except:
-    #     return None
-    #
-    # #now with a cell_size in hand(hopefully) we can parse PNORC lines
-    # for line in fo:
-    #     if line.startswith("$PNORC"):
-    #         try:
-    #             pnorc_arr = line.split(",")
-    #             data["cell_number"] = int(pnorc_arr[3])
-    #             data["depth[m]"] = data["cell_number"] * data["cell_size"] + 1 #1 is the installation depath - currently hard-coded :(
-    #             data["speed[m/s]"] = float(pnorc_arr[8])
-    #             data["direction[deg]"] = float(pnorc_arr[9])
-    #             json_data.append(json.dumps(data))
-    #         except:
-    #             print("-E- failed to parse line: " + line)
-    #
-    #
-    #
-    # # json_data.append(json.dumps(data))
-    # fo.close()
-    # return json_data
-
-
 def decrypt_header(encrypted_str):
 
     header = {} # will be added to  adcp_struct{} as a nested dictionary

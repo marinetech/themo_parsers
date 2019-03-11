@@ -6,6 +6,7 @@ def rad_parser(rad_log, sensor_name, sensor_id):
     data = {}
     data["longwave_irradiance"] = 0
     data["case_temperature"] = 0
+    data["dome_temperature"] = 0
     data["shortwave_irradiance"] = 0
     num_of_samples = 0
     json_data = []
@@ -24,6 +25,7 @@ def rad_parser(rad_log, sensor_name, sensor_id):
                     data["t_stamp"] = fields[2]
                     data["longwave_irradiance"] += float(fields[5])
                     data["case_temperature"] += float(fields[6])
+                    data["dome_temperature"] += float(fields[7])
                     data["shortwave_irradiance"] += float(fields[8])
                     num_of_samples += 1
                 except:
@@ -41,5 +43,5 @@ def rad_parser(rad_log, sensor_name, sensor_id):
 
 #For debug purposes only
 if __name__ == "__main__":
-    example = "/home/ilan/Documents/Themo/log_samples/rad.txt"
+    example = "/home/ilan/Desktop/tabs225m11/rad_pir_spp-averaged-tabs225m11-201903100648.txt"
     print(rad_parser(example, "rad", 45))

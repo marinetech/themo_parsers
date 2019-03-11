@@ -21,6 +21,9 @@ from parsers_lib.battery import *
 from parsers_lib.current import *
 from parsers_lib.system_volt import *
 from parsers_lib.disk_space import *
+from parsers_lib.adcp_wh import *
+from turner_c3 import *
+from parsers_lib.rad import *
 
 
 
@@ -83,6 +86,16 @@ def identify_and_route_to_parser(plog, buoy):
     dict_log_types["charge_current3-averaged"] = "current"
     dict_log_types["system_voltage-averaged"] = "system_volt"
     dict_log_types["disk_space-log"] = "disk_space"
+    dict_log_types["adcp-averaged-tabs225m11"] = "adcp_wh"
+    dict_log_types["turner_c3-averaged"] = "turner_c3"
+    dict_log_types["rad_pir_spp-averaged"] = "rad"
+
+
+
+
+
+
+
 
 
 
@@ -168,6 +181,6 @@ for tpl in parse_info:
         try:
             init_buoy(buoy)
             extract_compressed_logs(plog)
-            identify_and_route_to_parser(plog, buoy)            
+            identify_and_route_to_parser(plog, buoy)
         except:
             print_log("failed to handle buoy: " + buoy, plog, "-E-")

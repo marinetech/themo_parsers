@@ -7,8 +7,7 @@ from bson.json_util import dumps
 
 def turner_c3_parser(turner_log, sensor_name, sensor_id):
     data = {}
-    json_data = []
-    flntu_calibration = get_callibration_values(sensor_id)
+    json_data = []    
 
     data["sensor_name"] = sensor_name
     data["sensor_id"] = sensor_id
@@ -27,7 +26,7 @@ def turner_c3_parser(turner_log, sensor_name, sensor_id):
         data['chlorophyl'] = arr_line[2]
         data['turbidity'] = arr_line[4]
         data['temperature'] = arr_line[6]
-        break #one line is good enough      
+        break #one line is good enough
 
         if  __name__ == "__main__":
              print(data)

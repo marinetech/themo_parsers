@@ -22,7 +22,7 @@ from parsers_lib.current import *
 from parsers_lib.system_volt import *
 from parsers_lib.disk_space import *
 from parsers_lib.adcp_wh import *
-from turner_c3 import *
+from parsers_lib.turner_c3 import *
 from parsers_lib.rad import *
 
 
@@ -33,7 +33,9 @@ parse_info = [
                 ("/home/ilan/Desktop/tabsbuoy09", "/home/ilan/Desktop/tabsbuoy09/archive", "tabs225m09", "/home/ilan/Desktop/tabsbuoy09/logs"),
                 ("/home/tabs225m09", "/mnt/themo/tabs225m09_archive", "tabs225m09", "/mnt/themo/logs"),
                 ("/home/tabs225m10", "/mnt/themo/tabs225m10_archive", "tabs225m09", "/mnt/themo/logs"),
-                ("/home/ilan/sea_", "/home/ilan/sea/tabs225m10_archive", "tabs225m09", "/home/ilan/sea/logs")
+                ("/home/tabs225m11", "/mnt/themo/tabs225m11_archive", "tabs225m11", "/mnt/themo/logs"),
+                ("/home/ilan/sea_", "/home/ilan/sea/tabs225m10_archive", "tabs225m09", "/home/ilan/sea/logs"),
+                ("/home/ilan/Desktop/tabs225m11", "/home/ilan/Desktop/tabs225m11/tabs225m11_archive", "tabs225m11", "/home/ilan/Desktop/tabs225m11/logs")
              ]
 
 debug_mode = False
@@ -89,15 +91,6 @@ def identify_and_route_to_parser(plog, buoy):
     dict_log_types["adcp-averaged-tabs225m11"] = "adcp_wh"
     dict_log_types["turner_c3-averaged"] = "turner_c3"
     dict_log_types["rad_pir_spp-averaged"] = "rad"
-
-
-
-
-
-
-
-
-
 
 
 
@@ -178,9 +171,9 @@ for tpl in parse_info:
     if os.path.isdir(buoy_logs_dir):
         init_log(plog)
         print_log("inspecting: " + buoy_logs_dir, plog)
-        try:
-            init_buoy(buoy)
-            extract_compressed_logs(plog)
-            identify_and_route_to_parser(plog, buoy)
-        except:
-            print_log("failed to handle buoy: " + buoy, plog, "-E-")
+    # try:
+        init_buoy(buoy)
+        extract_compressed_logs(plog)
+        identify_and_route_to_parser(plog, buoy)
+    # except:
+        # print_log("failed to handle buoy: " + buoy, plog, "-E-")

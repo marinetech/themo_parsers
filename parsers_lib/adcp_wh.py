@@ -3,6 +3,8 @@ from dbutils import *
 import json
 from bson.json_util import dumps
 import io
+import numpy as np
+from math import *
 
 adcp_struct = {}
 
@@ -36,10 +38,18 @@ def adcp_wh_parser(adcp_log, sensor_name, sensor_id):
         for cell in adcp_struct["velocity_data"]["cells"]:
             # print(cell)
             data["cell_id"] = cell["id"]
-            data["beam1"] = cell["beam1"]
-            data["beam2"] = cell["beam2"]
-            data["beam3"] = cell["beam3"]
-            data["beam4"] = cell["beam4"]
+            data["east"] = cell["beam1"]
+            data["north"] = cell["beam2"]
+            data["surface"] = cell["beam3"]
+            data["err_vel"] = cell["beam4"]
+
+            bad_sampling_indicator = -32768
+            if bad_sampling_indicator in [data["east"], data["north"], data["surface"], data["err_vel"] ]:
+                data["treshold"] = 'x'
+                data["magnitude"] = bad_sampling_indicator
+                data["direction"] = bad_sampling_indicator
+            else:
+                data["magnitude"], data["direction"] = get_vector(data["east"],data["north"])
             json_data.append(json.dumps(data))
 
     fo.close()
@@ -186,8 +196,24 @@ def lsb2msb(string):
     return string[2:] + string[:2]
 
 
+def get_vector(east, north):
+    magnitude = sqrt(east**2 + north**2)
+
+    x1 = east
+    x2 = 0
+    y1 = north
+    y2 = 1
+
+    dot = x1*x2 + y1*y2      # dot product
+    det = x1*y2 - y1*x2      # determinant
+    direction = atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
+    if direction < 0:
+        direction = direction + 2*pi
+
+    return (magnitude,direction)
+
 
 if  __name__ == "__main__":
     adcp_wh_log = "/home/ilan/Documents/Themo/sensors/RDI WorkHorse/adcp-averaged/adcp-averaged-tabs225m11-201801111000.txt"
-    adcp_wh_parser(adcp_wh_log, "adcp_wh", "99999999999")
-    # print(str(adcp_struct))
+    x = adcp_wh_parser(adcp_wh_log, "adcp_wh", "99999999999")
+    print(str(x))

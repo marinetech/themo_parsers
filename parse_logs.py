@@ -24,6 +24,8 @@ from parsers_lib.disk_space import *
 from parsers_lib.adcp_wh import *
 from parsers_lib.turner_c3 import *
 from parsers_lib.rad import *
+from parsers_lib.mmp_c import *
+from parsers_lib.mmp_e import *
 
 
 
@@ -79,6 +81,7 @@ def identify_and_route_to_parser(plog, buoy):
     dict_log_types["windsonic-averaged"] = "windsonic"
     dict_log_types["sound_nine_ultimodem-averaged"] = "s9"
     dict_log_types["microstrain_gx3-25-averaged"] = "waves"
+    dict_log_types["microstrain_gx5-25-averaged"] = "waves"
     dict_log_types["ad2cp-telemetry"] = "adcp"
     dict_log_types["battery_voltage1-averaged"] = "battery"
     dict_log_types["battery_voltage2-averaged"] = "battery"
@@ -91,6 +94,8 @@ def identify_and_route_to_parser(plog, buoy):
     dict_log_types["adcp-averaged-tabs225m11"] = "adcp_wh"
     dict_log_types["turner_c3-averaged"] = "turner_c3"
     dict_log_types["rad_pir_spp-averaged"] = "rad"
+    dict_log_types["mmp-C`"] = "mmp_c"
+    dict_log_types["mmp-E"] = "mmp_e"
 
 
 
@@ -169,8 +174,12 @@ for tpl in parse_info:
     plog = plog_dir + "/" + buoy + '_' + now()
 
     if os.path.isdir(buoy_logs_dir):
-        init_log(plog)
-        print_log("inspecting: " + buoy_logs_dir, plog)
+        try:
+            init_log(plog)
+            print_log("inspecting: " + buoy_logs_dir, plog)
+        except:
+            continue
+
     # try:
         init_buoy(buoy)
         extract_compressed_logs(plog)

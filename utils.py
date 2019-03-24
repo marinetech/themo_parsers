@@ -44,7 +44,7 @@ def extract_date_time_from_file_name(log):
 def print_log(msg, log, prefix="-I- "):
     log_location = os.path.dirname(log)
     if not os.path.exists(log_location):
-        os.mkdir(log_location)
+        os.makedirs(log_location)
     with open(log, "a") as f:
         f.write(prefix + msg + "\n")
     print(prefix + " " + msg)

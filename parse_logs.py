@@ -180,9 +180,9 @@ for tpl in parse_info:
         except:
             continue
 
-    # try:
+    try:
         init_buoy(buoy)
         extract_compressed_logs(plog)
         identify_and_route_to_parser(plog, buoy)
-    # except:
-        # print_log("failed to handle buoy: " + buoy, plog, "-E-")
+    except:
+        print_log("failed to handle buoy: " + buoy, plog, "-E-")

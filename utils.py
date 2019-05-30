@@ -97,13 +97,16 @@ def trigger_alert(doc):
     sensor = doc["sensor_id"]
     # go through alldata fields that are valid for alert
     for key in doc:
-        if key not in ("d_stamp", "t_stamp", "source", "sensor_id", "sensor_name", "threshold", "const_err"):
-            subscription = sensor + "_" + key
-            subscribers = find_subscribers(subscription)
-            for subscriber in subscribers:
-                print(subscriber)
-                if eval(subscriber["expression"].replace("$$VAL", str(doc[key]))):
-                    objData = {"trigger" : subscriber["expression"], "measurement" : key,
+        if key not in ("d_stamp", "t_stamp", "source", "sensor_id", "sensor_name", "threshold", "const_err", "s9_id", "depth"):
+            try:
+                subscription = sensor + "_" + key
+                subscribers = find_subscribers(subscription)
+                for subscriber in subscribers:
+                    print(subscriber)
+                    if eval(subscriber["expression"].replace("$$VAL", str(doc[key]))):
+                        objData = {"trigger" : subscriber["expression"], "measurement" : key,
                                 "value" : str(doc[key]), "sensor_name" : doc["sensor_name"],
                                     "date" : doc["d_stamp"], "time" : doc["t_stamp"]}
-                    send_notification(subscriber["email"], objData)
+                        send_notification(subscriber["email"], objData)
+            except:
+                return

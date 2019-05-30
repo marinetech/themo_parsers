@@ -32,12 +32,12 @@ from parsers_lib.mmp_e import *
 #---------- global variables -----------#
 parse_info = [
                 # "dir with buoy logs", "where to archive processed logs", "which buoy is associated to that location, "where to write the log for this script"
-                ("/home/ilan/Desktop/tabsbuoy09", "/home/ilan/Desktop/tabsbuoy09/archive", "tabs225m09", "/home/ilan/Desktop/tabsbuoy09/logs"),
+                #("/home/ilan/Desktop/tabsbuoy09", "/home/ilan/Desktop/tabsbuoy09/archive", "tabs225m09", "/home/ilan/Desktop/tabsbuoy09/logs"),
                 ("/home/tabs225m09", "/mnt/themo/tabs225m09_archive", "tabs225m09", "/mnt/themo/logs"),
-                ("/home/tabs225m10", "/mnt/themo/tabs225m10_archive", "tabs225m09", "/mnt/themo/logs"),
-                ("/home/tabs225m11", "/mnt/themo/tabs225m11_archive", "tabs225m11", "/mnt/themo/logs"),
-                ("/home/ilan/sea_", "/home/ilan/sea/tabs225m10_archive", "tabs225m09", "/home/ilan/sea/logs"),
-                ("/home/ilan/Desktop/tabs225m11", "/home/ilan/Desktop/tabs225m11/tabs225m11_archive", "tabs225m11", "/home/ilan/Desktop/tabs225m11/logs")
+                #("/home/tabs225m10", "/mnt/themo/tabs225m10_archive", "tabs225m09", "/mnt/themo/logs"),
+                ("/home/tabs225m11", "/mnt/themo/tabs225m11_archive", "tabs225m11", "/mnt/themo/logs")
+                #("/home/ilan/sea_", "/home/ilan/sea/tabs225m10_archive", "tabs225m09", "/home/ilan/sea/logs"),
+                #("/home/ilan/Desktop/tabs225m11", "/home/ilan/Desktop/tabs225m11/tabs225m11_archive", "tabs225m11", "/home/ilan/Desktop/tabs225m11/logs")
              ]
 
 debug_mode = False
@@ -129,25 +129,23 @@ def identify_and_route_to_parser(plog, buoy):
                     print_log("failed to remove: " + log, plog, "-E-")
 
 
+
 def route_to_parser(log, sensor_name, plog, buoy):
     parser = sensor_name + "_parser"
     sensor_id = get_sensor_id(sensor_name)
     if sensor_id:
-        #try:
-            json_data = globals()[parser](log, sensor_name, sensor_id)
-            print_log("\n\n---{}---\n".format(parser), plog, "")
-            if not debug_mode:
-                os.remove(log)
-            if json_data != None:
-                for document in json_data:
-                    print(document)
-                    insert_samples(document, buoy)
-                    trigger_alert(json.loads(document)) #json to py dictionary
-                    print()
+        json_data = globals()[parser](log, sensor_name, sensor_id)
+        print_log("\n\n---{}---\n".format(parser), plog, "")
+        # if not debug_mode:
+        #     os.remove(log)
+        if json_data != None:
+            for document in json_data:
+                insert_samples(document, buoy)                
+                trigger_alert(json.loads(document)) #json to py dictionary
+        else:
+            print_log("-W- empty json")
         # except:
-        #     print()
-        #     print("-E- " +  parser + " is missing?")
-        #     print()
+        #     print_log("-E- " +  "error during insert")
         #     exit(1)
     else:
         print_log("", plog, "")
@@ -165,6 +163,7 @@ if len(sys.argv) > 1:
 
 init_db()
 for tpl in parse_info:
+    print("-I- processing: " + str(tpl) + "\n")
     buoy_logs_dir = tpl[0]
     if debug_mode:
         print("-D- buoy_logs_dir: " + buoy_logs_dir)
@@ -176,13 +175,12 @@ for tpl in parse_info:
     if os.path.isdir(buoy_logs_dir):
         try:
             init_log(plog)
-            print_log("inspecting: " + buoy_logs_dir, plog)
-        except:
+            # print_log("inspecting: " + buoy_logs_dir, plog)
+            init_buoy(buoy)
+            extract_compressed_logs(plog)
+            identify_and_route_to_parser(plog, buoy)
+        except Exception as ex:
+            print("-E- " + ex)
             continue
-
-    try:
-        init_buoy(buoy)
-        extract_compressed_logs(plog)
-        identify_and_route_to_parser(plog, buoy)
-    except:
-        print_log("failed to handle buoy: " + buoy, plog, "-E-")
+    else:
+        print("-I- no such dir: " + buoy_logs_dir + "\n")

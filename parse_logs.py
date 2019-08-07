@@ -26,7 +26,7 @@ from parsers_lib.turner_c3 import *
 from parsers_lib.rad import *
 from parsers_lib.mmp_c import *
 from parsers_lib.mmp_e import *
-from parsers_lib.symbiosys import *
+from parsers_lib.symbiosis import *
 
 
 
@@ -100,7 +100,7 @@ def identify_and_route_to_parser(plog, buoy):
     dict_log_types["rad_pir_spp-averaged"] = "rad"
     dict_log_types["mmp-C`"] = "mmp_c"
     dict_log_types["mmp-E"] = "mmp_e"
-    dict_log_types["symbiosys"] = "symbiosys"
+    dict_log_types["symbiosis"] = "symbiosis"
 
 
 

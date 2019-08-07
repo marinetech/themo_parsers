@@ -26,6 +26,7 @@ from parsers_lib.turner_c3 import *
 from parsers_lib.rad import *
 from parsers_lib.mmp_c import *
 from parsers_lib.mmp_e import *
+from parsers_lib.symbiosys import *
 
 
 
@@ -35,8 +36,8 @@ parse_info = [
                 #("/home/ilan/Desktop/tabsbuoy09", "/home/ilan/Desktop/tabsbuoy09/archive", "tabs225m09", "/home/ilan/Desktop/tabsbuoy09/logs"),
                 ("/home/tabs225m09", "/mnt/themo/tabs225m09_archive", "tabs225m09", "/mnt/themo/logs"),
                 #("/home/tabs225m10", "/mnt/themo/tabs225m10_archive", "tabs225m09", "/mnt/themo/logs"),
-                ("/home/tabs225m11", "/mnt/themo/tabs225m11_archive", "tabs225m11", "/mnt/themo/logs")
-                #("/home/ilan/sea_", "/home/ilan/sea/tabs225m10_archive", "tabs225m09", "/home/ilan/sea/logs"),
+                ("/home/tabs225m11", "/mnt/themo/tabs225m11_archive", "tabs225m11", "/mnt/themo/logs"),
+                ("/home/ilan/tmp", "/home/ilan/sea/tabs225m10_archive", "tabs225m09", "/home/ilan/sea/logs")
                 #("/home/ilan/Desktop/tabs225m11", "/home/ilan/Desktop/tabs225m11/tabs225m11_archive", "tabs225m11", "/home/ilan/Desktop/tabs225m11/logs")
              ]
 
@@ -46,6 +47,9 @@ debug_mode = False
 #-------- functions ------------#
 
 def get_sensor_id(sensor_name):
+    if sensor_name == "symbiosis":
+        return "666"
+
     if (sensor_name in dict_sensors):
         return str(dict_sensors[sensor_name])
     else:
@@ -96,6 +100,7 @@ def identify_and_route_to_parser(plog, buoy):
     dict_log_types["rad_pir_spp-averaged"] = "rad"
     dict_log_types["mmp-C`"] = "mmp_c"
     dict_log_types["mmp-E"] = "mmp_e"
+    dict_log_types["symbiosys"] = "symbiosys"
 
 
 
@@ -140,10 +145,10 @@ def route_to_parser(log, sensor_name, plog, buoy):
         #     os.remove(log)
         if json_data != None:
             for document in json_data:
-                insert_samples(document, buoy)                
+                insert_samples(document, buoy)
                 trigger_alert(json.loads(document)) #json to py dictionary
         else:
-            print_log("-W- empty json")
+            print_log("-W- empty json", plog)
         # except:
         #     print_log("-E- " +  "error during insert")
         #     exit(1)
@@ -180,7 +185,7 @@ for tpl in parse_info:
             extract_compressed_logs(plog)
             identify_and_route_to_parser(plog, buoy)
         except Exception as ex:
-            print("-E- " + ex)
+            print("-E- " + str(ex))
             continue
     else:
         print("-I- no such dir: " + buoy_logs_dir + "\n")
